@@ -30,7 +30,6 @@ fn exec2() {
     //let filename: &str = "input/day3/test.txt";
     let filename: &str = "input/day3/input.txt";
     let mut seq = parse_lines_as_chars(read_file(filename));
-    let seq2 = parse_lines_as_chars(read_file(filename));
 
     let mut result_seq_1 = Vec::new();
     for j in 0..seq[0].len() {
@@ -42,7 +41,7 @@ fn exec2() {
         }
     }
 
-    seq = seq2;
+    seq = parse_lines_as_chars(read_file(filename));
     let mut result_seq_2 = Vec::new();
     for j in 0..seq[0].len() {
         let more_common = find_more_common(&seq, j);
