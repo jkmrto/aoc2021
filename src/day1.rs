@@ -26,6 +26,7 @@ fn exec1() {
     println!("acc result: {}", acc);
 }
 
+#[cfg(test)]
 fn exec2() {
     // let filename = "input/day1/test.txt";
     let filename = "input/day1/input.txt";
@@ -34,7 +35,6 @@ fn exec2() {
     let vec: Vec<&str> = split.collect();
 
     let mut acc: u32 = 0;
-
     let mut xs = Vec::new();
     for line in vec.iter() {
         if line != &"" {
@@ -49,10 +49,9 @@ fn exec2() {
         if previous_window < current_window {
             acc = acc + 1;
         }
+
         previous_window = current_window
     }
-
-    println!(">>>> Exercise 2 result: {} <<<<<", acc);
 }
 
 #[cfg(test)]
