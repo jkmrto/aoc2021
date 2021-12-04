@@ -15,24 +15,14 @@ fn exec1() {
 
     let mut result = 0;
     for j in 0..seq[0].len() {
-        let mut ones = 0;
-        let mut zeros = 0;
-        for i in 0..seq.len() {
-            match &seq[i][j].to_string()[..] {
-                "1" => ones = ones + 1,
-                "0" => zeros = zeros + 1,
-                _ => println!("this is not working"),
-            };
-        }
-
-        if ones > zeros {
+        if find_more_common(&seq, j) == "1" {
             result = result + i32::pow(2, (seq[0].len() - (j + 1)).try_into().unwrap());
         }
     }
 
     let complementary = i32::pow(2, seq[0].len().try_into().unwrap()) - result - 1;
 
-    println!("result: {}", result * complementary)
+    println!("result: >>>> {} <<<<", result * complementary)
 }
 
 #[allow(dead_code)]
@@ -65,7 +55,7 @@ fn exec2() {
     }
 
     println!(
-        "final result: {}",
+        "exec 2 result: {}",
         build_decimal(&result_seq_1) * build_decimal(&result_seq_2)
     )
 }
@@ -120,6 +110,19 @@ fn find_more_common(seq: &Vec<Vec<char>>, j: usize) -> String {
     return value;
 }
 
+fn parse_lines_as_chars(input_lines: Vec<String>) -> Vec<Vec<char>> {
+    let mut seq = Vec::new();
+    for line in input_lines.iter() {
+        if line == &"" {
+            continue;
+        }
+
+        let res: Vec<char> = line.chars().collect();
+        seq.push(res)
+    }
+    return seq;
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -133,17 +136,4 @@ mod tests {
     fn day3_exec2() {
         exec2();
     }
-}
-
-fn parse_lines_as_chars(input_lines: Vec<String>) -> Vec<Vec<char>> {
-    let mut seq = Vec::new();
-    for line in input_lines.iter() {
-        if line == &"" {
-            continue;
-        }
-
-        let res: Vec<char> = line.chars().collect();
-        seq.push(res)
-    }
-    return seq;
 }
