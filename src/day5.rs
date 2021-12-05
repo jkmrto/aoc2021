@@ -1,6 +1,5 @@
 use std::collections::HashMap;
 use std::fs;
-use std::ops::Range;
 
 #[allow(dead_code)]
 pub fn exec1() {
@@ -14,7 +13,10 @@ pub fn exec1() {
         .collect();
 
     let wind_points = apply_winds_vectors(&filter_winds);
-    println!("Solution: {}", sum_too_windy_points(wind_points))
+    println!(
+        "Solution: {}",
+        wind_points.values().filter(|v| **v > 1).count()
+    )
 }
 
 #[allow(dead_code)]
@@ -33,7 +35,10 @@ pub fn exec2() {
         .collect();
 
     let wind_points = apply_winds_vectors(&filter_winds);
-    println!("Solution: {}", sum_too_windy_points(wind_points))
+    println!(
+        "Solution: {}",
+        wind_points.values().filter(|v| **v > 1).count()
+    );
 }
 
 fn apply_winds_vectors(winds_vectors: &Vec<((i32, i32), (i32, i32))>) -> HashMap<(i32, i32), i32> {
@@ -41,24 +46,11 @@ fn apply_winds_vectors(winds_vectors: &Vec<((i32, i32), (i32, i32))>) -> HashMap
     for wind_vector in winds_vectors {
         let winds = find_wind_points(*wind_vector);
         for wind_point in winds {
-            match wind_points.get(&wind_point) {
-                Some(&number) => wind_points.insert(wind_point, 1 + number),
-                _ => wind_points.insert(wind_point, 1),
-            };
+            *wind_points.entry(wind_point).or_default() += 1;
         }
     }
 
     return wind_points;
-}
-
-fn sum_too_windy_points(winds_register: HashMap<(i32, i32), i32>) -> i32 {
-    let mut sum = 0;
-    for ((_x, _y), points) in &winds_register {
-        if points > &1 {
-            sum = sum + 1;
-        }
-    }
-    return sum;
 }
 
 fn parse_winds_vectors(file_string: String) -> Vec<((i32, i32), (i32, i32))> {
