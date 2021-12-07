@@ -44,6 +44,7 @@ fn exec1() {
         println!("Day {}, Acccount: {}, register. {:?}", day, sum, registry);
     }
 }
+
 #[cfg(test)]
 mod tests {
     use super::*;
