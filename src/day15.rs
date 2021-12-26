@@ -3,9 +3,45 @@ use std::collections::HashSet;
 use std::fs;
 
 #[allow(dead_code)]
-fn exec(filename: &str) -> i32 {
+fn exec1(filename: &str) -> i32 {
+    let costs = read_board(filename);
+    return run(costs);
+}
+
+#[allow(dead_code)]
+fn exec2(filename: &str) -> i32 {
     let costs = read_board(filename);
 
+    let mut costs_5x_wider = Vec::new();
+    for line in &costs {
+        let mut line_updated = Vec::new();
+        for index in 0..5 {
+            for elem in line {
+                let value = elem + index;
+                let value = if value > 9 { value - 9 } else { value };
+                line_updated.push(value)
+            }
+        }
+        costs_5x_wider.push(line_updated);
+    }
+
+    let mut costs_5x_wider_5x_longer = Vec::new();
+    for index in 0..5 {
+        for line in &costs_5x_wider {
+            let mut line_updated = Vec::new();
+            for elem in line {
+                let value = elem + index;
+                let value = if value > 9 { value - 9 } else { value };
+                line_updated.push(value)
+            }
+            costs_5x_wider_5x_longer.push(line_updated);
+        }
+    }
+
+    return run(costs_5x_wider_5x_longer);
+}
+
+fn run(costs: Vec<Vec<i32>>) -> i32 {
     let mut paths: Vec<Vec<((i32, i32), i32)>> = [[((0, 0), 0)].to_vec()].to_vec();
     let mut old_destinies_cost: HashMap<(i32, i32), i32> = HashMap::new();
     old_destinies_cost.insert((0, 0), 0);
@@ -13,7 +49,7 @@ fn exec(filename: &str) -> i32 {
     let width = costs[0].len() as i32;
     let height = costs.len() as i32;
 
-    for step in 0..20000 {
+    for _step in 0..20000 {
         let mut new_paths = Vec::new();
         for path in paths {
             let mut temp_path = move_on_path(&path, &costs);
@@ -47,7 +83,6 @@ fn exec(filename: &str) -> i32 {
                 }
             };
         }
-        println!(" least_current_paths_cost: {:?}", least_current_paths_cost);
 
         for path in &paths {
             let last_pos = path[path.len() - 1];
@@ -66,13 +101,6 @@ fn exec(filename: &str) -> i32 {
         }
 
         paths = new_paths;
-
-        //println!(
-        //    "Step: {:?}, paths: {:?}, path: {:?} ",
-        //    step,
-        //    paths.len(),
-        //    paths[0]
-        //);
 
         if paths.len() == 1 {
             let last_pos = paths[0][paths[0].len() - 1];
@@ -155,7 +183,13 @@ mod tests {
 
     #[test]
     fn day15_exec1() {
-        assert_eq!(exec("input/day15/example.txt"), 40);
-        assert_eq!(exec("input/day15/input.txt"), 748);
+        assert_eq!(exec1("input/day15/example.txt"), 40);
+        assert_eq!(exec1("input/day15/input.txt"), 748);
+    }
+
+    #[test]
+    fn day15_exec2() {
+        assert_eq!(exec2("input/day15/example.txt"), 315);
+        assert_eq!(exec2("input/day15/input.txt"), 3045);
     }
 }
